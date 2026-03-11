@@ -5,7 +5,11 @@ const envSchema = z.object({
     .enum(['development', 'production', 'test'])
     .default('development'),
   PORT: z.coerce.number().default(8080),
-  DATABASE_URL: z.string()
+  DATABASE_URL: z.string(),
+  BETTER_AUTH_SECRET: z.string(),
+  API_BASE_URL: z.url().default('http://localhost:8080'),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string()
 })
 
 export const env = envSchema.parse(process.env)

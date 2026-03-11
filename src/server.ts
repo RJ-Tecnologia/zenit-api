@@ -1,5 +1,6 @@
 import fastify from 'fastify'
 import { env } from './env.js'
+import { authRoute } from './routes/auth.js'
 
 const envToLogger = {
   development: {
@@ -24,6 +25,8 @@ app.get('/', () => {
     message: 'API is running!'
   }
 })
+
+app.register(authRoute)
 
 try {
   await app.listen({ host: '0.0.0.0', port: env.PORT })
