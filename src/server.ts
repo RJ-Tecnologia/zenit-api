@@ -1,4 +1,12 @@
+import fastifySwagger from '@fastify/swagger'
+import fastifyApiReference from '@scalar/fastify-api-reference'
 import fastify from 'fastify'
+import {
+  jsonSchemaTransform,
+  serializerCompiler,
+  validatorCompiler,
+  type ZodTypeProvider
+} from 'fastify-type-provider-zod'
 import { env } from './env.js'
 import { authRoute } from './routes/auth.js'
 
@@ -20,11 +28,61 @@ const app = fastify({
   logger: envToLogger[env.NODE_ENV]
 })
 
+app.setValidatorCompiler(validatorCompiler)
+app.setSerializerCompiler(serializerCompiler)
+
+await app.register(fastifySwagger, {
+  openapi: {
+    info: {
+      title: 'Zenit Finance',
+      description: 'API REST do projeto Zenit Finance',
+      version: '1.0.0'
+    },
+    servers: [
+      {
+        description: 'Local',
+        url: env.API_BASE_URL
+      }
+    ]
+  },
+  transform: jsonSchemaTransform
+})
+
+await app.register(fastifyApiReference, {
+  routePrefix: '/docs',
+  configuration: {
+    sources: [
+      {
+        title: 'Zenit Finance API',
+        slug: 'zenit-finance-api',
+        url: '/swagger.json'
+      },
+      {
+        title: 'Auth API',
+        slug: 'auth-api',
+        url: '/api/auth/open-api/generate-schema'
+      }
+    ]
+  }
+})
+
 app.get('/', () => {
   return {
     message: 'API is running!'
   }
 })
+
+app.withTypeProvider<ZodTypeProvider>().get(
+  '/swagger.json',
+  {
+    schema: {
+      hide: true
+    }
+  },
+  async () => {
+    return app.swagger()
+  }
+)
 
 app.register(authRoute)
 

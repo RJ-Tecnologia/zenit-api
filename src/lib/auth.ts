@@ -5,6 +5,9 @@ import { prisma } from './prisma.js'
 
 export const auth = betterAuth({
   baseURL: env.API_BASE_URL,
+  emailAndPassword: {
+    enabled: true
+  },
   socialProviders: {
     google: {
       prompt: 'select_account',
