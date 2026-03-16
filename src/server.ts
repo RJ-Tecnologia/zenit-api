@@ -10,6 +10,8 @@ import {
 import { env } from './env.js'
 import { authRoute } from './routes/auth.js'
 import { categoriesRoutes } from './routes/categories.js'
+import { healthCheckRoute } from './routes/health.js'
+import { transactionsRoutes } from './routes/transactions.js'
 
 const envToLogger = {
   development: {
@@ -52,6 +54,7 @@ await app.register(fastifySwagger, {
 await app.register(fastifyApiReference, {
   routePrefix: '/docs',
   configuration: {
+    theme: 'bluePlanet',
     sources: [
       {
         title: 'Zenit Finance API',
@@ -67,13 +70,9 @@ await app.register(fastifyApiReference, {
   }
 })
 
-app.get('/', () => {
-  return {
-    message: 'API is running!'
-  }
-})
-
+await app.register(healthCheckRoute, { prefix: '/' })
 await app.register(categoriesRoutes, { prefix: '/categories' })
+await app.register(transactionsRoutes, { prefix: '/transactions' })
 
 app.withTypeProvider<ZodTypeProvider>().get(
   '/swagger.json',
