@@ -67,7 +67,7 @@ export function transactionsRoutes(app: FastifyInstance) {
           description: z.string().optional(),
           type: z.enum(TransactionType),
           amount: z.number(),
-          date: z.date(),
+          date: z.iso.datetime(),
           categoryId: z.uuid()
         }),
         response: {
@@ -122,7 +122,7 @@ export function transactionsRoutes(app: FastifyInstance) {
           description: z.string().optional(),
           type: z.enum(TransactionType),
           amount: z.number(),
-          date: z.date(),
+          date: z.iso.date(),
           categoryId: z.uuid()
         }),
         response: {
