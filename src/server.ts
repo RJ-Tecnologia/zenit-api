@@ -8,6 +8,7 @@ import {
   type ZodTypeProvider
 } from 'fastify-type-provider-zod'
 import { env } from './env.js'
+import { errorHandler } from './middlewares/error-handler.js'
 import { authRoute } from './routes/auth.js'
 import { categoriesRoutes } from './routes/categories.js'
 import { healthCheckRoute } from './routes/health.js'
@@ -69,6 +70,8 @@ await app.register(fastifyApiReference, {
     ]
   }
 })
+
+app.setErrorHandler(errorHandler)
 
 await app.register(healthCheckRoute, { prefix: '/' })
 await app.register(categoriesRoutes, { prefix: '/categories' })
