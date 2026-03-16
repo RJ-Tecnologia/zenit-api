@@ -8,6 +8,9 @@
     "node": "24"
   },
   "scripts": {
+    "prebuild": "prisma migrate deploy && prisma generate",
+    "build": "tsc && tsc-alias",
+    "start": "node --env-file=.env dist/server.js",
     "dev": "tsx watch --env-file=.env src/server.ts",
     "lint": "biome check",
     "format": "biome format --write .",
@@ -22,6 +25,7 @@
     "@types/node": "^25.4.0",
     "@types/pg": "^8.18.0",
     "prisma": "^7.5.0",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
