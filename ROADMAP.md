@@ -66,10 +66,10 @@
 - [ ] Criar rota para listar movimentações por mês
 - [ ] Criar rota para editar movimentação
 - [ ] Criar rota para excluir movimentação
-- [ ] Criar rota para cadastro de categoria
-- [ ] Criar rota para edição de categoria
-- [ ] Criar rota para listagem de categorias
-- [ ] Criar rota para exclusão de categorias
+- [X] Criar rota para cadastro de categoria
+- [X] Criar rota para edição de categoria
+- [X] Criar rota para listagem de categorias
+- [X] Criar rota para exclusão de categorias
 
 ---
 

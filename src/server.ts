@@ -9,6 +9,7 @@ import {
 } from 'fastify-type-provider-zod'
 import { env } from './env.js'
 import { authRoute } from './routes/auth.js'
+import { categoriesRoutes } from './routes/categories.js'
 
 const envToLogger = {
   development: {
@@ -71,6 +72,8 @@ app.get('/', () => {
     message: 'API is running!'
   }
 })
+
+await app.register(categoriesRoutes, { prefix: '/categories' })
 
 app.withTypeProvider<ZodTypeProvider>().get(
   '/swagger.json',
