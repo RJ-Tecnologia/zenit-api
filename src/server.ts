@@ -10,9 +10,9 @@ import {
 import { env } from './env.js'
 import { errorHandler } from './middlewares/error-handler.js'
 import { authRoute } from './routes/auth.js'
-import { categoriesRoutes } from './routes/categories.js'
+import { categoriesRoutes } from './routes/categories/index.js'
 import { healthCheckRoute } from './routes/health.js'
-import { transactionsRoutes } from './routes/transactions.js'
+import { transactionsRoutes } from './routes/transactions/index.js'
 
 const envToLogger = {
   development: {
@@ -74,6 +74,7 @@ await app.register(fastifyApiReference, {
 app.setErrorHandler(errorHandler)
 
 await app.register(healthCheckRoute, { prefix: '/' })
+
 await app.register(categoriesRoutes, { prefix: '/categories' })
 await app.register(transactionsRoutes, { prefix: '/transactions' })
 

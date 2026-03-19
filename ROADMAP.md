@@ -62,10 +62,10 @@
 - Implementar o core da aplicação
 
 ### Tarefas
-- [ ] Criar rota para criar movimentação
-- [ ] Criar rota para listar movimentações por mês
-- [ ] Criar rota para editar movimentação
-- [ ] Criar rota para excluir movimentação
+- [X] Criar rota para criar movimentação
+- [X] Criar rota para listar movimentações por mês
+- [X] Criar rota para editar movimentação
+- [X] Criar rota para excluir movimentação
 - [X] Criar rota para cadastro de categoria
 - [X] Criar rota para edição de categoria
 - [X] Criar rota para listagem de categorias
@@ -80,9 +80,9 @@
 - Colocar a API no ar
 
 ### Tarefas
-- [ ] Configrar o banco de dados em nuvem
-- [ ] Fazer o deploy da aplicação em alguma plataforma (Railway, Render, VPS)
-- [ ] Configurar o domínio
+- [X] Configrar o banco de dados em nuvem
+- [X] Fazer o deploy da aplicação em alguma plataforma (Railway, Render, VPS)
+- [X] Configurar o domínio
 
 ---
 
