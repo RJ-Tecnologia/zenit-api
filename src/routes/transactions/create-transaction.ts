@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
+import { InvalidCategory } from '@/errors/index.js'
 import { TransactionType } from '@/generated/prisma/enums.js'
 import { prisma } from '@/lib/prisma.js'
 import { errorSchema } from '@/schemas/index.js'
@@ -25,12 +26,25 @@ export function createTransaction(app: FastifyInstance) {
           201: z.object({
             message: z.string()
           }),
-          401: errorSchema
+          401: errorSchema,
+          409: errorSchema
         }
       }
     },
     async (request, reply) => {
       const { body } = request
+
+      const category = await prisma.category.findUniqueOrThrow({
+        where: {
+          id: body.categoryId
+        }
+      })
+
+      if (category.scope !== 'BOTH' && category.scope !== body.type) {
+        throw new InvalidCategory(
+          'Category incompatible with transaction type.'
+        )
+      }
 
       await prisma.transaction.create({
         data: {

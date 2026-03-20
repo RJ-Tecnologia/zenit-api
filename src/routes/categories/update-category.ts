@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
+import { ItemAlreadyExists } from '@/errors/index.js'
 import { CategoryScope } from '@/generated/prisma/enums.js'
 import { prisma } from '@/lib/prisma.js'
 import { errorSchema } from '@/schemas/index.js'
@@ -24,13 +25,33 @@ export function updateCategory(app: FastifyInstance) {
           200: z.object({
             message: z.string()
           }),
-          401: errorSchema
+          401: errorSchema,
+          409: errorSchema
         }
       }
     },
     async (request, reply) => {
       const { id } = request.params
       const { name, scope } = request.body
+
+      const hasCategoryWithSameName = await prisma.category.findFirst({
+        where: {
+          id: {
+            not: id
+          },
+          name: {
+            equals: name,
+            mode: 'insensitive'
+          },
+          userId: request.session.user.id
+        }
+      })
+
+      if (hasCategoryWithSameName) {
+        throw new ItemAlreadyExists(
+          `There is already a category with the name '${name}'`
+        )
+      }
 
       await prisma.category.update({
         where: {

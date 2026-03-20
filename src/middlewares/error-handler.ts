@@ -1,5 +1,9 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { UnauthorizedError } from '../errors/index.js'
+import {
+  InvalidCategory,
+  ItemAlreadyExists,
+  UnauthorizedError
+} from '../errors/index.js'
 
 type HttpError = Error & { statusCode?: number }
 
@@ -18,6 +22,18 @@ export const errorHandler = (
 
   if (error instanceof UnauthorizedError) {
     reply.status(403).send({ error: error.message, code: 'FORBIDDEN' })
+    return
+  }
+
+  if (error instanceof ItemAlreadyExists) {
+    reply
+      .status(409)
+      .send({ error: error.message, code: 'ITEM_ALREADY_EXISTS' })
+    return
+  }
+
+  if (error instanceof InvalidCategory) {
+    reply.status(409).send({ error: error.message, code: 'INVALID_CATEGORY' })
     return
   }
 
