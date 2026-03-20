@@ -1,10 +1,7 @@
-import { fromNodeHeaders } from 'better-auth/node'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { UnauthorizedError } from '@/errors/index.js'
 import { TransactionType } from '@/generated/prisma/enums.js'
-import { auth } from '@/lib/auth.js'
 import { prisma } from '@/lib/prisma.js'
 import { errorSchema } from '@/schemas/index.js'
 
@@ -33,14 +30,6 @@ export function createTransaction(app: FastifyInstance) {
       }
     },
     async (request, reply) => {
-      const session = await auth.api.getSession({
-        headers: fromNodeHeaders(request.headers)
-      })
-
-      if (!session) {
-        throw new UnauthorizedError()
-      }
-
       const { body } = request
 
       await prisma.transaction.create({
@@ -51,7 +40,7 @@ export function createTransaction(app: FastifyInstance) {
           type: body.type,
           description: body.description,
           categoryId: body.categoryId,
-          userId: session.user.id
+          userId: request.session.user.id
         }
       })
 

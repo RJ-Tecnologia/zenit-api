@@ -7,6 +7,7 @@ import {
   validatorCompiler,
   type ZodTypeProvider
 } from 'fastify-type-provider-zod'
+import type { UserSession } from './@types/fastify.js'
 import { env } from './env.js'
 import { errorHandler } from './middlewares/error-handler.js'
 import { authRoute } from './routes/auth.js'
@@ -31,6 +32,8 @@ const envToLogger = {
 const app = fastify({
   logger: envToLogger[env.NODE_ENV]
 })
+
+app.decorateRequest('session', null as unknown as UserSession)
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)

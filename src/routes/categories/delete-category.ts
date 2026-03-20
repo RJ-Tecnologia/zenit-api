@@ -1,9 +1,6 @@
-import { fromNodeHeaders } from 'better-auth/node'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { UnauthorizedError } from '@/errors/index.js'
-import { auth } from '@/lib/auth.js'
 import { prisma } from '@/lib/prisma.js'
 import { errorSchema } from '@/schemas/index.js'
 
@@ -27,20 +24,12 @@ export function deleteCategory(app: FastifyInstance) {
       }
     },
     async (request, reply) => {
-      const session = await auth.api.getSession({
-        headers: fromNodeHeaders(request.headers)
-      })
-
-      if (!session) {
-        throw new UnauthorizedError()
-      }
-
       const { id } = request.params
 
       await prisma.category.delete({
         where: {
           id,
-          userId: session.user.id
+          userId: request.session.user.id
         }
       })
 
