@@ -7,6 +7,7 @@ import { seedUserCategories } from './seed-user-categories.js'
 
 export const auth = betterAuth({
   baseURL: env.API_BASE_URL,
+  trustedOrigins: [env.FRONTEND_URL],
   emailAndPassword: {
     enabled: true
   },
@@ -29,5 +30,11 @@ export const auth = betterAuth({
       }
     }
   },
-  plugins: [openAPI()]
+  plugins: [openAPI()],
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: env.NODE_ENV === 'production' ? env.APP_DOMAIN : undefined
+    }
+  }
 })

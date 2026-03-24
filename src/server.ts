@@ -1,3 +1,4 @@
+import fastifyCors from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
 import fastifyApiReference from '@scalar/fastify-api-reference'
 import fastify from 'fastify'
@@ -53,6 +54,11 @@ await app.register(fastifySwagger, {
     ]
   },
   transform: jsonSchemaTransform
+})
+
+await app.register(fastifyCors, {
+  origin: [env.FRONTEND_URL],
+  credentials: true
 })
 
 await app.register(fastifyApiReference, {
