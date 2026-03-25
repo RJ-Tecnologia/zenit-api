@@ -49,7 +49,11 @@ await app.register(fastifySwagger, {
     servers: [
       {
         description: 'Local',
-        url: env.API_BASE_URL
+        url: 'http://localhost:8080'
+      },
+      {
+        description: 'Prod',
+        url: 'https://api.zenitfinace.com.br'
       }
     ]
   },
