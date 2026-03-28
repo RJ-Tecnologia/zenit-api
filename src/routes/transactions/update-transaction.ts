@@ -22,7 +22,7 @@ export function updateTransaction(app: FastifyInstance) {
           description: z.string().optional(),
           type: z.enum(TransactionType),
           amount: z.number(),
-          date: z.iso.date(),
+          date: z.iso.datetime(),
           categoryId: z.uuid()
         }),
         response: {

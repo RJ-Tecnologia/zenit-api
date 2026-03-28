@@ -62,6 +62,7 @@ await app.register(fastifySwagger, {
 
 await app.register(fastifyCors, {
   origin: [env.FRONTEND_URL],
+  methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS'],
   credentials: true
 })
 
