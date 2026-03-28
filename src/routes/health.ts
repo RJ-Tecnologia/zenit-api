@@ -8,6 +8,7 @@ export function healthCheckRoute(app: FastifyInstance) {
     {
       schema: {
         summary: 'Health check',
+        tags: ['Health'],
         response: {
           200: z.object({
             message: z.string()

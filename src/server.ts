@@ -53,7 +53,7 @@ await app.register(fastifySwagger, {
       },
       {
         description: 'Prod',
-        url: 'https://api.zenitfinace.com.br'
+        url: 'https://api.zenitfinance.com.br'
       }
     ]
   },
