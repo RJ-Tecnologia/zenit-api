@@ -13,6 +13,10 @@ export function getTransactions(app: FastifyInstance) {
         operationId: 'getAllTransactions',
         summary: 'Lista todas as movimentações (transações) do usuário logado',
         tags: ['Transactions'],
+        querystring: z.object({
+          page: z.coerce.number().min(1).default(1),
+          limit: z.coerce.number().min(1).max(100).default(20)
+        }),
         response: {
           200: z.object({
             transactions: z.array(
@@ -25,21 +29,50 @@ export function getTransactions(app: FastifyInstance) {
                 date: z.date(),
                 categoryId: z.uuid()
               })
-            )
+            ),
+            meta: z.object({
+              total: z.number(),
+              perPage: z.number(),
+              currentPage: z.number(),
+              lastPage: z.number()
+            })
           }),
           401: errorSchema
         }
       }
     },
     async (request, reply) => {
-      const transactions = await prisma.transaction.findMany({
-        where: {
-          userId: request.session.user.id
-        }
-      })
+      const { page, limit } = request.query
+      const skip = (page - 1) * limit
+
+      const [transactions, total] = await Promise.all([
+        prisma.transaction.findMany({
+          where: {
+            userId: request.session.user.id
+          },
+          orderBy: {
+            date: 'desc'
+          },
+          take: limit,
+          skip
+        }),
+        prisma.transaction.count({
+          where: {
+            userId: request.session.user.id
+          }
+        })
+      ])
+
+      const lastPage = Math.ceil(total / limit)
 
       return reply.status(200).send({
-        transactions
+        transactions,
+        meta: {
+          total,
+          perPage: limit,
+          currentPage: page,
+          lastPage
+        }
       })
     }
   )
