@@ -31,7 +31,7 @@ async function seed() {
       id: crypto.randomUUID(),
       userId: user.id,
       accountId: user.id, // Better Auth standard: usually matches user ID for email/password
-      providerId: 'email',
+      providerId: 'credential',
       password: hashedPassword
     }
   })
