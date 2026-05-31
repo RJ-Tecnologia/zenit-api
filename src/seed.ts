@@ -1,5 +1,5 @@
 import { hashPassword } from 'better-auth/crypto'
-import { prisma } from '../src/lib/prisma.js'
+import { prisma } from './lib/prisma.js'
 
 async function seed() {
   console.log('🌱 Starting seed...')
@@ -17,8 +17,8 @@ async function seed() {
   const user = await prisma.user.create({
     data: {
       name: 'John Doe',
-      email: 'test@example.com',
-    },
+      email: 'test@example.com'
+    }
   })
 
   // 3. Create account for authentication
@@ -32,11 +32,13 @@ async function seed() {
       userId: user.id,
       accountId: user.id, // Better Auth standard: usually matches user ID for email/password
       providerId: 'email',
-      password: hashedPassword,
-    },
+      password: hashedPassword
+    }
   })
 
-  console.log(`✅ User created with email: test@example.com and password: ${password}`)
+  console.log(
+    `✅ User created with email: test@example.com and password: ${password}`
+  )
 
   // 4. Create 30 categories
   console.log('📂 Creating categories...')

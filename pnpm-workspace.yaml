@@ -1,6 +1,11 @@
 packages:
   - .
 
+allowBuilds:
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+
 onlyBuiltDependencies:
   - '@prisma/engines'
   - esbuild
@@ -11,8 +16,9 @@ overrides:
   defu: 6.1.5
   drizzle-orm: 0.45.2
   effect: 3.20.0
-  fast-uri: 3.1.1
+  fast-uri: 3.1.2
   hono: 4.12.18
   kysely: 0.28.17
   lodash: 4.18.0
   yaml: 2.8.3
+  picomatch: 2.3.2

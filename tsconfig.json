@@ -6,11 +6,11 @@
     "target": "es2024",
     "skipLibCheck": true,
     "strict": true,
+    "rootDir": ".",
     "outDir": "./dist",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "prisma/**.ts"]
+  "include": ["src"]
 }
