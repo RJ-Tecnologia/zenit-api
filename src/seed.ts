@@ -1,5 +1,13 @@
+import { PrismaPg } from '@prisma/adapter-pg'
 import { hashPassword } from 'better-auth/crypto'
-import { prisma } from './lib/prisma.js'
+import { Pool } from 'pg'
+import { env } from './env.js'
+import { PrismaClient } from './generated/prisma/client.js'
+
+const connectionString = `${env.DATABASE_URL}`
+const pool = new Pool({ connectionString })
+const adapter = new PrismaPg(pool)
+const prisma = new PrismaClient({ adapter })
 
 async function seed() {
   console.log('🌱 Starting seed...')
@@ -23,7 +31,7 @@ async function seed() {
 
   // 3. Create account for authentication
   console.log('🔐 Creating account for authentication...')
-  const password = 'password123'
+  const password = 'Senha123'
   const hashedPassword = await hashPassword(password)
 
   await prisma.account.create({
@@ -69,7 +77,7 @@ async function seed() {
       data: {
         title: `Transaction ${i + 1}`,
         amount: (Math.random() * 1000 + 1).toFixed(2),
-        date: new Date(Date.now() - i * 24 * 60 * 60 * 1000), // One per day backwards
+        date: new Date(Date.now() - i * 3 * 24 * 60 * 60 * 1000),
         userId: user.id,
         categoryId: category.id,
         type
@@ -81,7 +89,14 @@ async function seed() {
   console.log('✅ Seed finished successfully!')
 }
 
-seed().catch((e) => {
-  console.error('❌ Seed failed:', e)
-  process.exit(1)
-})
+seed()
+  .then(async () => {
+    await prisma.$disconnect()
+    await pool.end()
+  })
+  .catch(async (e) => {
+    console.error('❌ Seed failed:', e)
+    await prisma.$disconnect()
+    await pool.end()
+    process.exit(1)
+  })
