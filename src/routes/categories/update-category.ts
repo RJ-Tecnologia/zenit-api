@@ -3,6 +3,7 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { ItemAlreadyExists } from '@/errors/index.js'
 import { CategoryScope } from '@/generated/prisma/enums.js'
+import { categoryIconSchema } from '@/lib/icons.js'
 import { prisma } from '@/lib/prisma.js'
 import { errorSchema } from '@/schemas/index.js'
 
@@ -19,7 +20,8 @@ export function updateCategory(app: FastifyInstance) {
         }),
         body: z.object({
           name: z.string(),
-          scope: z.enum(CategoryScope).default('BOTH')
+          scope: z.enum(CategoryScope).default('BOTH'),
+          icon: categoryIconSchema.default('circle')
         }),
         response: {
           200: z.object({
@@ -32,7 +34,7 @@ export function updateCategory(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { id } = request.params
-      const { name, scope } = request.body
+      const { name, scope, icon } = request.body
 
       const hasCategoryWithSameName = await prisma.category.findFirst({
         where: {
@@ -60,7 +62,8 @@ export function updateCategory(app: FastifyInstance) {
         },
         data: {
           name,
-          scope
+          scope,
+          icon
         }
       })
 

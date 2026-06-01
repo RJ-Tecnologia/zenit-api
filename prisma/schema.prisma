@@ -60,6 +60,7 @@ enum CategoryScope {
 model Category {
   id        String        @id @default(uuid())
   name      String
+  icon      String        @default("circle")
   userId    String        @map("user_id")
   scope     CategoryScope
   createdAt DateTime      @default(now()) @map("created_at")

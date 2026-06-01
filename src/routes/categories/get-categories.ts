@@ -19,6 +19,7 @@ export function getCategories(app: FastifyInstance) {
               z.object({
                 id: z.string(),
                 name: z.string(),
+                icon: z.string(),
                 scope: z.enum(CategoryScope)
               })
             )
