@@ -13,6 +13,9 @@ export function getCategories(app: FastifyInstance) {
         operationId: 'getAllCategories',
         summary: 'Lista todas as categorias do usuário logado',
         tags: ['Categories'],
+        querystring: z.object({
+          name: z.string().optional()
+        }),
         response: {
           200: z.object({
             categories: z.array(
@@ -29,9 +32,15 @@ export function getCategories(app: FastifyInstance) {
       }
     },
     async (request, reply) => {
+      const { name } = request.query
+
       const categories = await prisma.category.findMany({
         where: {
-          userId: request.session.user.id
+          userId: request.session.user.id,
+          name: {
+            contains: name,
+            mode: 'insensitive'
+          }
         }
       })
 

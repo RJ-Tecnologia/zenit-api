@@ -15,7 +15,9 @@ export function getTransactions(app: FastifyInstance) {
         tags: ['Transactions'],
         querystring: z.object({
           page: z.coerce.number().min(1).default(1),
-          limit: z.coerce.number().min(1).max(100).default(20)
+          limit: z.coerce.number().min(1).max(100).default(20),
+          title: z.string().optional(),
+          type: z.enum(TransactionType).optional()
         }),
         response: {
           200: z.object({
@@ -42,14 +44,21 @@ export function getTransactions(app: FastifyInstance) {
       }
     },
     async (request, reply) => {
-      const { page, limit } = request.query
+      const { page, limit, title, type } = request.query
       const skip = (page - 1) * limit
+
+      const where = {
+        userId: request.session.user.id,
+        title: {
+          contains: title,
+          mode: 'insensitive' as const
+        },
+        type
+      }
 
       const [transactions, total] = await Promise.all([
         prisma.transaction.findMany({
-          where: {
-            userId: request.session.user.id
-          },
+          where,
           orderBy: {
             date: 'desc'
           },
@@ -57,9 +66,7 @@ export function getTransactions(app: FastifyInstance) {
           skip
         }),
         prisma.transaction.count({
-          where: {
-            userId: request.session.user.id
-          }
+          where
         })
       ])
 
